@@ -15,12 +15,6 @@ RUN composer install --no-dev --optimize-autoloader --no-interaction
 
 RUN chmod -R 775 storage bootstrap/cache
 
-# Generar APP_KEY si no existe
-RUN php artisan key:generate --force 2>/dev/null || true
-
 EXPOSE 8080
 
-CMD php artisan config:clear && \
-    php artisan migrate --force && \
-    php artisan db:seed --force && \
-    php artisan serve --host=0.0.0.0 --port=8080
+CMD php artisan config:clear && php artisan migrate --force && php artisan serve --host=0.0.0.0 --port=8080
