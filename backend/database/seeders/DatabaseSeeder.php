@@ -16,14 +16,12 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         // ── Usuarios ──────────────────────────────────────────────────────────
-        $admin = User::create([
-            'name'     => 'Administrador',
-            'email'    => 'admin@torneos.com',
-            'password' => Hash::make('password'),
-            'role'     => 'admin',
-        ]);
+        $admin = User::firstOrCreate(
+            ['email' => 'admin@torneos.com'],
+            ['name' => 'Administrador', 'password' => Hash::make('password'), 'role' => 'admin']
+        );
 
-        $users = collect([
+        $usersData = [
             ['name' => 'Carlos Mendoza',    'email' => 'carlos@torneos.com'],
             ['name' => 'Sofía Ramírez',     'email' => 'sofia@torneos.com'],
             ['name' => 'Diego Torres',      'email' => 'diego@torneos.com'],
@@ -40,12 +38,17 @@ class DatabaseSeeder extends Seeder
             ['name' => 'Daniela Ortiz',     'email' => 'daniela@torneos.com'],
             ['name' => 'Alejandro Ruiz',    'email' => 'alejandro@torneos.com'],
             ['name' => 'Gabriela Peña',     'email' => 'gabriela@torneos.com'],
-        ])->map(fn($u) => User::create([
-            'name'     => $u['name'],
-            'email'    => $u['email'],
-            'password' => Hash::make('password'),
-            'role'     => 'user',
-        ]));
+        ];
+
+        $users = collect($usersData)->map(fn($u) => User::firstOrCreate(
+            ['email' => $u['email']],
+            ['name' => $u['name'], 'password' => Hash::make('password'), 'role' => 'user']
+        ));
+
+        // Si ya hay torneos, no volver a seedear
+        if (Tournament::count() > 0) {
+            return;
+        }
 
         // ── Helper: crear equipos + registraciones ────────────────────────────
         $makeTeams = function (Tournament $t, array $names) use ($users) {
