@@ -14,7 +14,8 @@ COPY . .
 RUN composer install --no-dev --optimize-autoloader --no-interaction
 
 RUN chmod -R 775 storage bootstrap/cache
+RUN chmod +x start.sh
 
 EXPOSE 8080
 
-CMD php artisan config:clear && php artisan migrate --force && php artisan serve --host=0.0.0.0 --port=8080
+CMD ["/bin/bash", "start.sh"]
