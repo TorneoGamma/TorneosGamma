@@ -12,12 +12,12 @@ return new class extends Migration
             $table->id();
             $table->foreignId('created_by')->constrained('users')->onDelete('cascade');
             $table->string('name');
-            $table->string('discipline'); // futbol, videojuegos, ajedrez, etc.
+            $table->string('discipline');
             $table->text('description')->nullable();
             $table->integer('max_teams');
             $table->enum('status', ['inscripciones', 'en_curso', 'finalizado'])->default('inscripciones');
             $table->integer('current_round')->default(0);
-            $table->foreignId('champion_id')->nullable()->constrained('teams')->nullOnDelete();
+            $table->unsignedBigInteger('champion_id')->nullable(); // FK se agrega después de teams
             $table->timestamp('starts_at')->nullable();
             $table->timestamps();
         });

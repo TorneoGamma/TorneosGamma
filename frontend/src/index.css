@@ -2,51 +2,90 @@
 
 @layer base {
   :root {
-    --color-brand: 99 102 241;
-    --color-brand-dark: 79 70 229;
+    --bg-base:    #0a0f1e;
+    --bg-surface: #0f1629;
+    --bg-card:    #131d35;
+    --bg-hover:   #1a2540;
+    --border:     rgba(255,255,255,0.07);
+    --accent:     #0ea5e9;
+    --accent-dim: rgba(14,165,233,0.15);
   }
 
+  html { background-color: #0a0f1e; }
+
   body {
+    background-color: #0a0f1e;
+    color: #e2e8f0;
     font-family: 'Inter', system-ui, -apple-system, sans-serif;
     -webkit-font-smoothing: antialiased;
   }
 
   * {
     scrollbar-width: thin;
-    scrollbar-color: #374151 transparent;
+    scrollbar-color: #1e2d4a transparent;
   }
 }
 
 @layer components {
+  /* ── Botones ── */
   .btn-primary {
-    @apply bg-indigo-600 hover:bg-indigo-500 active:bg-indigo-700 text-white font-medium px-4 py-2 rounded-lg text-sm transition-all duration-150 disabled:opacity-40 disabled:cursor-not-allowed;
+    @apply inline-flex items-center justify-center gap-2
+           bg-sky-500 hover:bg-sky-400 active:bg-sky-600
+           text-white font-semibold text-sm px-4 py-2 rounded-lg
+           transition-all duration-150
+           disabled:opacity-40 disabled:cursor-not-allowed
+           shadow-lg shadow-sky-500/20;
   }
 
   .btn-ghost {
-    @apply bg-white/5 hover:bg-white/10 text-gray-300 hover:text-white font-medium px-4 py-2 rounded-lg text-sm transition-all duration-150 border border-white/10;
+    @apply inline-flex items-center justify-center gap-2
+           bg-white/5 hover:bg-white/10 text-slate-300 hover:text-white
+           font-medium text-sm px-4 py-2 rounded-lg
+           border border-white/8 transition-all duration-150;
   }
 
   .btn-danger {
-    @apply bg-red-600/20 hover:bg-red-600/40 text-red-400 hover:text-red-300 font-medium px-4 py-2 rounded-lg text-sm transition-all duration-150 border border-red-600/30;
+    @apply inline-flex items-center justify-center gap-2
+           bg-red-500/10 hover:bg-red-500/20 text-red-400 hover:text-red-300
+           font-medium text-sm px-4 py-2 rounded-lg
+           border border-red-500/20 transition-all duration-150;
   }
 
+  /* ── Cards ── */
   .card {
-    @apply bg-gray-900 border border-white/5 rounded-2xl;
+    @apply bg-[#131d35] border border-white/7 rounded-2xl;
   }
 
+  /* ── Inputs ── */
   .input {
-    @apply w-full bg-gray-800/60 border border-white/10 text-white placeholder-gray-500 rounded-xl px-4 py-2.5 text-sm outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500/50 transition-all;
+    @apply w-full bg-[#0f1629] border border-white/10 text-slate-200
+           placeholder-slate-600 rounded-xl px-4 py-2.5 text-sm
+           outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500/30
+           transition-all duration-150;
   }
 
+  /* ── Badges ── */
   .badge-green {
-    @apply inline-flex items-center gap-1 bg-emerald-500/15 text-emerald-400 border border-emerald-500/20 text-xs font-medium px-2.5 py-0.5 rounded-full;
+    @apply inline-flex items-center gap-1.5
+           bg-emerald-500/10 text-emerald-400 border border-emerald-500/20
+           text-xs font-medium px-2.5 py-0.5 rounded-full;
   }
 
   .badge-yellow {
-    @apply inline-flex items-center gap-1 bg-amber-500/15 text-amber-400 border border-amber-500/20 text-xs font-medium px-2.5 py-0.5 rounded-full;
+    @apply inline-flex items-center gap-1.5
+           bg-amber-500/10 text-amber-400 border border-amber-500/20
+           text-xs font-medium px-2.5 py-0.5 rounded-full;
   }
 
   .badge-gray {
-    @apply inline-flex items-center gap-1 bg-gray-500/15 text-gray-400 border border-gray-500/20 text-xs font-medium px-2.5 py-0.5 rounded-full;
+    @apply inline-flex items-center gap-1.5
+           bg-slate-500/10 text-slate-400 border border-slate-500/20
+           text-xs font-medium px-2.5 py-0.5 rounded-full;
+  }
+
+  .badge-blue {
+    @apply inline-flex items-center gap-1.5
+           bg-sky-500/10 text-sky-400 border border-sky-500/20
+           text-xs font-medium px-2.5 py-0.5 rounded-full;
   }
 }
