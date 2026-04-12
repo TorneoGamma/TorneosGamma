@@ -1,42 +1,76 @@
 import { Link } from 'react-router-dom'
 
-const statusColors = {
-  inscripciones: 'bg-green-600',
-  en_curso: 'bg-yellow-500',
-  finalizado: 'bg-gray-500',
+const disciplineIcons = {
+  'Fútbol': '⚽',
+  'Videojuegos': '🎮',
+  'Ajedrez': '♟️',
+  'Baloncesto': '🏀',
+  'Tenis': '🎾',
+  'Otro': '🏅',
 }
 
-const statusLabels = {
-  inscripciones: 'Inscripciones abiertas',
-  en_curso: 'En curso',
-  finalizado: 'Finalizado',
+const statusBadge = {
+  inscripciones: { cls: 'badge-green', dot: 'bg-emerald-400', label: 'Inscripciones' },
+  en_curso:      { cls: 'badge-yellow', dot: 'bg-amber-400',   label: 'En curso' },
+  finalizado:    { cls: 'badge-gray',   dot: 'bg-gray-400',    label: 'Finalizado' },
 }
 
 export default function TournamentCard({ tournament }) {
+  const badge = statusBadge[tournament.status] ?? statusBadge.finalizado
+  const icon = disciplineIcons[tournament.discipline] ?? '🏅'
+  const filled = tournament.teams_count ?? 0
+  const pct = Math.min(100, Math.round((filled / tournament.max_teams) * 100))
+
   return (
     <Link
       to={`/tournaments/${tournament.id}`}
-      className="block bg-gray-800 rounded-xl p-5 hover:bg-gray-750 hover:ring-1 hover:ring-indigo-500 transition"
+      className="card p-5 flex flex-col gap-3 hover:border-indigo-500/40 hover:bg-gray-800/60 transition-all duration-200 group"
     >
-      <div className="flex items-start justify-between mb-2">
-        <h3 className="text-white font-semibold text-lg leading-tight">{tournament.name}</h3>
-        <span className={`text-xs text-white px-2 py-0.5 rounded-full ${statusColors[tournament.status]}`}>
-          {statusLabels[tournament.status]}
+      {/* Top row */}
+      <div className="flex items-start justify-between gap-2">
+        <div className="flex items-center gap-2.5">
+          <div className="w-9 h-9 rounded-xl bg-gray-800 border border-white/10 flex items-center justify-center text-lg shrink-0">
+            {icon}
+          </div>
+          <div>
+            <h3 className="text-white font-semibold text-sm leading-tight group-hover:text-indigo-300 transition-colors line-clamp-1">
+              {tournament.name}
+            </h3>
+            <p className="text-gray-500 text-xs mt-0.5">{tournament.discipline}</p>
+          </div>
+        </div>
+        <span className={badge.cls}>
+          <span className={`w-1.5 h-1.5 rounded-full ${badge.dot} inline-block`} />
+          {badge.label}
         </span>
       </div>
 
-      <p className="text-indigo-400 text-sm mb-3">🎮 {tournament.discipline}</p>
-
+      {/* Description */}
       {tournament.description && (
-        <p className="text-gray-400 text-sm mb-3 line-clamp-2">{tournament.description}</p>
+        <p className="text-gray-500 text-xs leading-relaxed line-clamp-2">{tournament.description}</p>
       )}
 
-      <div className="flex items-center justify-between text-xs text-gray-500">
-        <span>👥 {tournament.teams_count} / {tournament.max_teams} equipos</span>
-        {tournament.champion && (
-          <span className="text-yellow-400">🥇 {tournament.champion.name}</span>
-        )}
+      {/* Progress bar */}
+      <div>
+        <div className="flex justify-between text-xs text-gray-500 mb-1.5">
+          <span>{filled} / {tournament.max_teams} equipos</span>
+          <span>{pct}%</span>
+        </div>
+        <div className="h-1 bg-gray-800 rounded-full overflow-hidden">
+          <div
+            className="h-full bg-indigo-500 rounded-full transition-all"
+            style={{ width: `${pct}%` }}
+          />
+        </div>
       </div>
+
+      {/* Champion */}
+      {tournament.champion && (
+        <div className="flex items-center gap-1.5 text-xs text-amber-400 bg-amber-500/10 border border-amber-500/20 rounded-lg px-2.5 py-1.5">
+          <span>🥇</span>
+          <span className="font-medium">{tournament.champion.name}</span>
+        </div>
+      )}
     </Link>
   )
 }

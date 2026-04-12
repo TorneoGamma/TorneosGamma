@@ -11,43 +11,64 @@ export default function RegisterPage() {
     register.mutate(form)
   }
 
-  const field = (key, type, placeholder) => (
-    <input
-      type={type} required placeholder={placeholder}
-      value={form[key]}
-      onChange={(e) => setForm((f) => ({ ...f, [key]: e.target.value }))}
-      className="bg-gray-800 text-white rounded-lg px-4 py-2.5 text-sm outline-none focus:ring-2 focus:ring-indigo-500"
-    />
-  )
+  const errors = register.error?.response?.data?.errors ?? {}
 
   return (
-    <div className="min-h-screen bg-gray-950 flex items-center justify-center px-4">
-      <div className="bg-gray-900 rounded-2xl p-8 w-full max-w-sm shadow-xl">
-        <h1 className="text-2xl font-bold text-white mb-1">Crear cuenta</h1>
-        <p className="text-gray-400 text-sm mb-6">Únete a TorneosGamma</p>
+    <div className="min-h-[calc(100vh-56px)] bg-gray-950 flex items-center justify-center px-4 py-12">
+      <div className="w-full max-w-sm">
 
-        {register.error && (
-          <div className="bg-red-900/40 border border-red-700 text-red-300 text-sm rounded-lg px-4 py-2 mb-4">
-            {Object.values(register.error.response?.data?.errors ?? {}).flat().join(' ')}
-          </div>
-        )}
+        <div className="text-center mb-8">
+          <div className="w-12 h-12 rounded-2xl bg-indigo-600 flex items-center justify-center text-2xl mx-auto mb-4">🏆</div>
+          <h1 className="text-2xl font-bold text-white">Crear cuenta</h1>
+          <p className="text-gray-500 text-sm mt-1">Únete a TorneosGamma</p>
+        </div>
 
-        <form onSubmit={handleSubmit} className="flex flex-col gap-4">
-          {field('name', 'text', 'Nombre completo')}
-          {field('email', 'email', 'Correo electrónico')}
-          {field('password', 'password', 'Contraseña (mín. 8 caracteres)')}
-          {field('password_confirmation', 'password', 'Confirmar contraseña')}
-          <button
-            type="submit" disabled={register.isPending}
-            className="bg-indigo-600 hover:bg-indigo-700 disabled:opacity-50 text-white font-semibold py-2.5 rounded-lg text-sm"
-          >
-            {register.isPending ? 'Creando cuenta...' : 'Registrarse'}
-          </button>
-        </form>
+        <div className="card p-6">
+          {register.error && Object.keys(errors).length === 0 && (
+            <div className="bg-red-500/10 border border-red-500/20 text-red-400 text-sm rounded-xl px-4 py-3 mb-4">
+              {register.error.response?.data?.message ?? 'Error al crear la cuenta'}
+            </div>
+          )}
 
-        <p className="text-gray-500 text-sm text-center mt-4">
+          <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+            {[
+              { key: 'name', type: 'text', label: 'Nombre completo', placeholder: 'Tu nombre' },
+              { key: 'email', type: 'email', label: 'Correo electrónico', placeholder: 'tu@email.com' },
+              { key: 'password', type: 'password', label: 'Contraseña', placeholder: '••••••••' },
+              { key: 'password_confirmation', type: 'password', label: 'Confirmar contraseña', placeholder: '••••••••' },
+            ].map(({ key, type, label, placeholder }) => (
+              <div key={key}>
+                <label className="text-gray-400 text-xs font-medium mb-1.5 block">{label}</label>
+                <input
+                  type={type} required
+                  value={form[key]}
+                  onChange={(e) => setForm((f) => ({ ...f, [key]: e.target.value }))}
+                  className={`input ${errors[key] ? 'border-red-500/50' : ''}`}
+                  placeholder={placeholder}
+                />
+                {errors[key] && (
+                  <p className="text-red-400 text-xs mt-1">{errors[key][0]}</p>
+                )}
+              </div>
+            ))}
+
+            <button type="submit" disabled={register.isPending} className="btn-primary w-full justify-center mt-1">
+              {register.isPending ? (
+                <span className="flex items-center justify-center gap-2">
+                  <svg className="animate-spin w-4 h-4" fill="none" viewBox="0 0 24 24">
+                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"/>
+                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z"/>
+                  </svg>
+                  Creando cuenta...
+                </span>
+              ) : 'Crear cuenta'}
+            </button>
+          </form>
+        </div>
+
+        <p className="text-gray-600 text-sm text-center mt-4">
           ¿Ya tienes cuenta?{' '}
-          <Link to="/login" className="text-indigo-400 hover:underline">Inicia sesión</Link>
+          <Link to="/login" className="text-indigo-400 hover:text-indigo-300 transition-colors">Inicia sesión</Link>
         </p>
       </div>
     </div>
