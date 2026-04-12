@@ -44,15 +44,17 @@ export default function Navbar() {
           {user ? (
             <>
               <div className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-white/5 border border-white/8">
-                <div className="w-6 h-6 rounded-full bg-sky-600 flex items-center justify-center text-xs font-bold text-white">
-                  {user.name[0].toUpperCase()}
-                </div>
-                <span className="text-slate-300 text-sm">{user.name}</span>
-                {user.role === 'admin' && (
-                  <span className="text-xs bg-sky-500/20 text-sky-300 border border-sky-500/30 px-1.5 py-0.5 rounded-md">
-                    Admin
-                  </span>
-                )}
+                <Link to="/profile" className="flex items-center gap-2 hover:opacity-80 transition-opacity">
+                  <div className="w-6 h-6 rounded-full bg-sky-600 flex items-center justify-center text-xs font-bold text-white">
+                    {user.name[0].toUpperCase()}
+                  </div>
+                  <span className="text-slate-300 text-sm">{user.name}</span>
+                  {user.role === 'admin' && (
+                    <span className="text-xs bg-sky-500/20 text-sky-300 border border-sky-500/30 px-1.5 py-0.5 rounded-md">
+                      Admin
+                    </span>
+                  )}
+                </Link>
               </div>
               <button onClick={logout} className="btn-ghost text-xs px-3 py-1.5">Salir</button>
             </>

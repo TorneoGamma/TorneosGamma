@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { useTournaments } from '../hooks/useTournaments'
 import TournamentCard from '../components/TournamentCard'
+import SearchBar from '../components/SearchBar'
 
 const DISCIPLINES = ['Fútbol', 'Videojuegos', 'Ajedrez', 'Baloncesto', 'Tenis', 'Otro']
 const STATUSES = [
@@ -12,10 +13,15 @@ const STATUSES = [
 
 export default function TournamentsPage() {
   const [filters, setFilters] = useState({ discipline: '', status: '' })
+  const [search, setSearch] = useState('')
   const { data, isLoading } = useTournaments(
     Object.fromEntries(Object.entries(filters).filter(([, v]) => v))
   )
-  const tournaments = data?.data ?? []
+
+  const tournaments = (data?.data ?? []).filter(t =>
+    !search || t.name.toLowerCase().includes(search.toLowerCase()) ||
+    t.discipline.toLowerCase().includes(search.toLowerCase())
+  )
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 py-10">
@@ -28,6 +34,7 @@ export default function TournamentsPage() {
 
       {/* Filters */}
       <div className="flex flex-wrap items-center gap-3 mb-8">
+        <SearchBar onSearch={setSearch} />
         <div className="relative">
           <select value={filters.discipline}
             onChange={(e) => setFilters(f => ({ ...f, discipline: e.target.value }))}

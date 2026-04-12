@@ -7,6 +7,7 @@ import LoginPage from './pages/LoginPage'
 import RegisterPage from './pages/RegisterPage'
 import AdminPage from './pages/AdminPage'
 import ReportsPage from './pages/ReportsPage'
+import ProfilePage from './pages/ProfilePage'
 import { RequireAdmin } from './components/ProtectedRoute'
 
 const queryClient = new QueryClient({
@@ -26,6 +27,7 @@ export default function App() {
               <Route path="/login" element={<LoginPage />} />
               <Route path="/register" element={<RegisterPage />} />
               <Route path="/reports" element={<ReportsPage />} />
+              <Route path="/profile" element={<ProfilePage />} />
               <Route path="/admin" element={
                 <RequireAdmin><AdminPage /></RequireAdmin>
               } />
