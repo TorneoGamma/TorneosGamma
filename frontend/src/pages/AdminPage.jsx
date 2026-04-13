@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { useTournaments, useCreateTournament, useDeleteTournament } from '../hooks/useTournaments'
+import { toast } from '../components/Toast'
 
 const DISCIPLINES = ['Fútbol', 'Videojuegos', 'Ajedrez', 'Baloncesto', 'Tenis', 'Otro']
 const emptyForm = { name: '', discipline: 'Fútbol', description: '', max_teams: 8, starts_at: '' }
@@ -18,11 +19,19 @@ export default function AdminPage() {
 
   const handleSubmit = (e) => {
     e.preventDefault()
-    createTournament.mutate(form, { onSuccess: () => { setForm(emptyForm); setShowForm(false) } })
+    createTournament.mutate(form, {
+      onSuccess: () => { setForm(emptyForm); setShowForm(false); toast.success('Torneo creado correctamente') },
+      onError: () => toast.error('Error al crear el torneo'),
+    })
   }
 
   const handleDelete = (id, name) => {
-    if (confirm(`¿Eliminar "${name}"? Esta acción no se puede deshacer.`)) deleteTournament.mutate(id)
+    if (confirm(`¿Eliminar "${name}"? Esta acción no se puede deshacer.`)) {
+      deleteTournament.mutate(id, {
+        onSuccess: () => toast.success('Torneo eliminado'),
+        onError: () => toast.error('Error al eliminar'),
+      })
+    }
   }
 
   const tournaments = data?.data ?? []

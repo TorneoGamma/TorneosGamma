@@ -8,6 +8,8 @@ import RegisterPage from './pages/RegisterPage'
 import AdminPage from './pages/AdminPage'
 import ReportsPage from './pages/ReportsPage'
 import ProfilePage from './pages/ProfilePage'
+import NotFoundPage from './pages/NotFoundPage'
+import ToastContainer from './components/Toast'
 import { RequireAdmin } from './components/ProtectedRoute'
 
 const queryClient = new QueryClient({
@@ -18,7 +20,7 @@ export default function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <BrowserRouter>
-        <div className="min-h-screen bg-gray-950 text-white">
+        <div className="min-h-screen bg-[#0a0f1e] text-white">
           <Navbar />
           <main>
             <Routes>
@@ -28,11 +30,11 @@ export default function App() {
               <Route path="/register" element={<RegisterPage />} />
               <Route path="/reports" element={<ReportsPage />} />
               <Route path="/profile" element={<ProfilePage />} />
-              <Route path="/admin" element={
-                <RequireAdmin><AdminPage /></RequireAdmin>
-              } />
+              <Route path="/admin" element={<RequireAdmin><AdminPage /></RequireAdmin>} />
+              <Route path="*" element={<NotFoundPage />} />
             </Routes>
           </main>
+          <ToastContainer />
         </div>
       </BrowserRouter>
     </QueryClientProvider>

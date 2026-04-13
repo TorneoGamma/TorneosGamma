@@ -14,14 +14,13 @@ const STATUSES = [
 export default function TournamentsPage() {
   const [filters, setFilters] = useState({ discipline: '', status: '' })
   const [search, setSearch] = useState('')
+  const [page, setPage] = useState(1)
   const { data, isLoading } = useTournaments(
-    Object.fromEntries(Object.entries(filters).filter(([, v]) => v))
+    Object.fromEntries(Object.entries({ ...filters, search, page }).filter(([, v]) => v))
   )
 
-  const tournaments = (data?.data ?? []).filter(t =>
-    !search || t.name.toLowerCase().includes(search.toLowerCase()) ||
-    t.discipline.toLowerCase().includes(search.toLowerCase())
-  )
+  const tournaments = data?.data ?? []
+  const lastPage = data?.last_page ?? 1
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 py-10">
@@ -102,6 +101,30 @@ export default function TournamentsPage() {
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
             {tournaments.map(t => <TournamentCard key={t.id} tournament={t} />)}
           </div>
+
+          {/* Paginación */}
+          {lastPage > 1 && (
+            <div className="flex items-center justify-center gap-2 mt-8">
+              <button onClick={() => setPage(p => Math.max(1, p - 1))} disabled={page === 1}
+                className="btn-ghost px-3 py-1.5 text-xs disabled:opacity-30">
+                ← Anterior
+              </button>
+              <div className="flex gap-1">
+                {Array.from({ length: lastPage }, (_, i) => i + 1).map(p => (
+                  <button key={p} onClick={() => setPage(p)}
+                    className={`w-8 h-8 rounded-lg text-xs font-medium transition-all ${
+                      p === page ? 'bg-sky-500 text-white' : 'bg-[#131d35] text-slate-400 hover:text-white border border-white/8'
+                    }`}>
+                    {p}
+                  </button>
+                ))}
+              </div>
+              <button onClick={() => setPage(p => Math.min(lastPage, p + 1))} disabled={page === lastPage}
+                className="btn-ghost px-3 py-1.5 text-xs disabled:opacity-30">
+                Siguiente →
+              </button>
+            </div>
+          )}
         </>
       )}
     </div>

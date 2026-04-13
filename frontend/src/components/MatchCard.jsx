@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { useRecordResult } from '../hooks/useTournaments'
+import { toast } from './Toast'
 
 export default function MatchCard({ match, isAdmin }) {
   const [showForm, setShowForm] = useState(false)
@@ -17,7 +18,10 @@ export default function MatchCard({ match, isAdmin }) {
     const winner_id = s1 > s2 ? match.team1_id : match.team2_id
     recordResult.mutate(
       { matchId: match.id, score_team1: s1, score_team2: s2, winner_id },
-      { onSuccess: () => setShowForm(false) }
+      {
+        onSuccess: () => { setShowForm(false); toast.success('Resultado registrado') },
+        onError: () => toast.error('Error al registrar resultado'),
+      }
     )
   }
 

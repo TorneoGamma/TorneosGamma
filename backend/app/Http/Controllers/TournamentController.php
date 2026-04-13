@@ -19,6 +19,12 @@ class TournamentController extends Controller
         if ($request->has('status')) {
             $query->where('status', $request->status);
         }
+        if ($request->has('search') && $request->search) {
+            $query->where(function ($q) use ($request) {
+                $q->where('name', 'ilike', "%{$request->search}%")
+                  ->orWhere('discipline', 'ilike', "%{$request->search}%");
+            });
+        }
 
         return response()->json($query->latest()->paginate(12));
     }

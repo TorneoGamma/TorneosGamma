@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom'
+import Countdown from './Countdown'
 
 const disciplineIcons = {
   'Fútbol': '⚽', 'Videojuegos': '🎮', 'Ajedrez': '♟️',
@@ -71,6 +72,10 @@ export default function TournamentCard({ tournament }) {
           <span>🥇</span>
           <span className="font-medium">{tournament.champion.name}</span>
         </div>
+      )}
+
+      {tournament.starts_at && tournament.status === 'inscripciones' && (
+        <Countdown date={tournament.starts_at} />
       )}
     </Link>
   )
